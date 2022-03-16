@@ -53,6 +53,7 @@ export default function App() {
     //Function to convert jpeg image to tensors
     const TO_UINT8ARRAY = true;
     const { width, height, data } = jpeg.decode(rawImageData, TO_UINT8ARRAY);
+
     // Drop the alpha channel info for mobilenet
     const buffer = new Uint8Array(width * height * 3);
     let offset = 0; // offset into original data
@@ -70,6 +71,8 @@ export default function App() {
       console.log("[+] Retrieving image from link :" + imageLink);
       const response = await fetch(imageLink, {}, { isBinary: true });
       const rawImageData = await response.arrayBuffer();
+      console.log('RESPONSE: ', rawImageData);
+
 
       const imageTensor = await imageToTensor(rawImageData).resizeBilinear([
         224, 224,
