@@ -16,6 +16,8 @@ import ImageColors from "react-native-image-colors";
 import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
 import * as FileSystem from 'expo-file-system';
 
+import knn from '../utils/knn';
+
 export default function ResultPage({ navigation, route }) {
   const [isEnabled, setIsEnabled] = useState(true);
   const [mucosas, setMucosas] = useState([]);
@@ -127,22 +129,26 @@ export default function ResultPage({ navigation, route }) {
     });
     console.log("Cores: ", result);
 
+    let dominantColor;
+
     switch (result.platform) {
       case "android":
         // android result properties
-        const vibrantColor = result.vibrant;
+        dominantColor = result.dominant;
         break;
       case "web":
         // web result properties
-        const lightVibrantColor = result.lightVibrant;
+        dominantColor = result.dominant;
         break;
       case "ios":
         // iOS result properties
-        const primaryColor = result.primary;
+        dominantColor = result.primary;
         break;
       default:
         throw new Error("Unexpected platform key");
     }
+
+    console.log('KNN: ', knn(dominantColor));
   };
 
   return (
