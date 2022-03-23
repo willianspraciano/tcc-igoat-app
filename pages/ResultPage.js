@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, ScrollView } from "react-native";
+import { StyleSheet, View, Image, ScrollView, Text } from "react-native";
 import { Button, Input } from "react-native-elements";
 
 import * as tf from "@tensorflow/tfjs";
@@ -14,9 +14,9 @@ import "expo-dev-client";
 import ImageColors from "react-native-image-colors";
 
 import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system";
 
-import knn from '../utils/knn';
+import { knn } from "../utils/knn";
 
 export default function ResultPage({ navigation, route }) {
   const [isEnabled, setIsEnabled] = useState(true);
@@ -25,6 +25,8 @@ export default function ResultPage({ navigation, route }) {
 
   const [image, setImage] = useState(route.params?.image);
   const [croppedImage, setCroppedImage] = useState();
+  const [color, setColor] = useState();
+  const [textResult, setTextResult] = useState();
 
   useEffect(() => {
     (async () => {
@@ -58,24 +60,26 @@ export default function ResultPage({ navigation, route }) {
       //   224, 224,
       // ]);
 
-      const imageAssetPath = Image.resolveAssetSource(imageObj)
+      const imageAssetPath = Image.resolveAssetSource(imageObj);
 
       console.log(imageAssetPath);
       const imgB64 = await FileSystem.readAsStringAsync(imageAssetPath.uri, {
         encoding: FileSystem.EncodingType.Base64,
       });
-      const imgBuffer = tf.util.encodeString(imgB64, 'base64').buffer;
+      const imgBuffer = tf.util.encodeString(imgB64, "base64").buffer;
       const raw = new Uint8Array(imgBuffer);
-      const imageTensor = imageToTensor(raw)
-        .resizeBilinear([
-          240, 240,
-        ]);
+      const imageTensor = imageToTensor(raw).resizeBilinear([240, 240]);
 
       const options = { score: 0.5, iou: 0.5, topk: 20 };
       const predictions = await model.detect(imageTensor, options);
       console.log("Predict: ", predictions);
 
       console.log("[+] Prediction Completed");
+
+      if (predictions.length === 0) {
+        setTextResult("Mucosa não detectada!");
+        return;
+      }
 
       var tempArray = [];
       //Loop through the available faces, check if the person is wearing a mask.
@@ -116,16 +120,17 @@ export default function ResultPage({ navigation, route }) {
           },
         },
       ],
-      { compress: 1, format: SaveFormat.JPG }
+      { format: SaveFormat.JPG }
     );
     //console.log(resizedImage);
     console.log(img);
     setCroppedImage(croppedImg);
 
     const result = await ImageColors.getColors(croppedImg.uri, {
-      fallback: "#228B22",
-      cache: true,
+      fallback: "#ffffff",
+      pixelSpacing: 1,
       key: "unique_key",
+      quality: "highest",
     });
     console.log("Cores: ", result);
 
@@ -134,7 +139,7 @@ export default function ResultPage({ navigation, route }) {
     switch (result.platform) {
       case "android":
         // android result properties
-        dominantColor = result.dominant;
+        dominantColor = result.muted;
         break;
       case "web":
         // web result properties
@@ -148,7 +153,11 @@ export default function ResultPage({ navigation, route }) {
         throw new Error("Unexpected platform key");
     }
 
-    console.log('KNN: ', knn(dominantColor));
+    await setColor(dominantColor);
+    const diagnosis = knn(dominantColor);
+    console.log("Diagnóstico: ", diagnosis);
+    console.log("Color: ", dominantColor);
+    await setTextResult(diagnosis[1] === "T" ? "Vermifugar" : "Não Vermifugar");
   };
 
   return (
@@ -200,6 +209,18 @@ export default function ResultPage({ navigation, route }) {
                 PlaceholderContent={<View>No Image Found</View>}
               />
             </>
+          )}
+          {color && (
+            <Text
+              style={{
+                color: color,
+              }}
+            >
+              Cor de análise: {color}
+            </Text>
+          )}
+          {textResult && (
+            <Text style={{ fontWeight: "bold" }}>{textResult}</Text>
           )}
         </View>
         {/* <Button

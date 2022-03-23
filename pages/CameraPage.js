@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
+import React, { useState, useEffect, useRef } from "react";
+import {
   StyleSheet,
   Text,
   View,
   SafeAreaView,
   TouchableOpacity,
   Modal,
-  Image 
-} from 'react-native';
-import { Camera } from 'expo-camera';
+  Image,
+} from "react-native";
+import { Camera } from "expo-camera";
 
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from "@expo/vector-icons";
 
 import * as tf from "@tensorflow/tfjs";
 import { fetch, bundleResourceIO } from "@tensorflow/tfjs-react-native";
@@ -25,21 +25,26 @@ import ImageColors from "react-native-image-colors";
 
 import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
 
+import { useIsFocused } from "@react-navigation/native";
+
 export default function CameraPage({ navigation }) {
   const camRef = useRef(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  
+
   const [mucosas, setMucosas] = useState([]);
-  const [model, setModel] = useState("");
+  const [model, setModel] = useState();
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
-      if(status === 'granted'){
-        setHasPermission(true);
+      if (status === "granted") setHasPermission(true);
+
+      if (!model) {
         console.log("[+] Application started");
         //Wait for tensorflow module to be ready
         const tfReady = await tf.ready();
@@ -62,8 +67,9 @@ export default function CameraPage({ navigation }) {
     })();
   }, []);
 
-  async function takePicture(){
-    if(camRef){
+  async function takePicture() {
+    //camRef.resumePreview();
+    if (camRef) {
       const data = await camRef.current.takePictureAsync();
       setCapturedPhoto(data.uri);
       // setOpenModal(true);
@@ -75,48 +81,37 @@ export default function CameraPage({ navigation }) {
         { compress: 1, format: SaveFormat.JPG }
       );
       console.log(imageObj);
-      navigation.navigate('Resultado', { image: imageObj, model: model });
+      camRef.current.pausePreview();
+      navigation.navigate("Resultado", { image: imageObj, model: model });
     }
   }
 
-  if(hasPermission === null)
-    return <View/>;
+  // if (hasPermission === null) return <View />;
 
-  if(hasPermission === false)
-    return <Text> Acesso negado! </Text>;
+  if (hasPermission === false) return <Text> Acesso negado! </Text>;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Camera
-        style={{ flex: 1 }}
-        type={type}
-        ref={camRef}
-      />
+      {isFocused && <Camera style={{ flex: 1 }} type={type} ref={camRef} />}
       <TouchableOpacity style={styles.button} onPress={takePicture}>
-        <FontAwesome name="camera" size={23} color="#FFF"/>
+        <FontAwesome name="camera" size={23} color="#FFF" />
       </TouchableOpacity>
-      {
-        capturedPhoto &&
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={openModal}
-        >
+      {capturedPhoto && (
+        <Modal animationType="slide" transparent={false} visible={openModal}>
           <View style={styles.containerModal}>
-            <TouchableOpacity 
-              style={{ margin: 10 }} 
+            <TouchableOpacity
+              style={{ margin: 10 }}
               onPress={() => setOpenModal(false)}
             >
-              <FontAwesome name="window-close" size={50} color="#FF0000"/>
+              <FontAwesome name="window-close" size={50} color="#FF0000" />
             </TouchableOpacity>
             <Image
-              style={{ width: '100%', height: 300, borderRadius: 20 }}
+              style={{ width: "100%", height: 300, borderRadius: 20 }}
               source={{ uri: capturedPhoto }}
             />
-
           </View>
         </Modal>
-      }
+      )}
     </SafeAreaView>
   );
 }
@@ -124,20 +119,20 @@ export default function CameraPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#121212',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#121212",
     margin: 20,
     borderRadius: 10,
     height: 50,
   },
   containerModal: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     margin: 20,
   },
 });

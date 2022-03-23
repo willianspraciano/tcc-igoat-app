@@ -1,403 +1,400 @@
-import { distance } from 'ml-distance'; // biblioteca para obter Distância Euclidiana
-import { mode } from 'simple-statistics'; // biblioteca para obter a Moda
-import hexRgb from 'hex-rgb';
+import { distance } from "ml-distance"; // biblioteca para obter Distância Euclidiana
+import { mode } from "simple-statistics"; // biblioteca para obter a Moda
+import hexRgb from "hex-rgb";
 
 const trainingData = [
   {
     red: 213,
     green: 46,
     blue: 37,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 231,
     green: 136,
     blue: 108,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 245,
     green: 140,
     blue: 119,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 243,
     green: 114,
     blue: 95,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 236,
     green: 107,
     blue: 88,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 253,
     green: 102,
     blue: 78,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 238,
     green: 106,
     blue: 94,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 225,
     green: 96,
     blue: 74,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 233,
     green: 118,
     blue: 121,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 212,
     green: 108,
     blue: 115,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 193,
     green: 90,
     blue: 117,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 216,
     green: 94,
     blue: 105,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 196,
     green: 85,
     blue: 104,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 215,
     green: 93,
     blue: 106,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 166,
     green: 44,
     blue: 55,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 249,
     green: 108,
     blue: 101,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 218,
     green: 104,
     blue: 103,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 231,
     green: 113,
     blue: 111,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 202,
     green: 89,
     blue: 85,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 202,
     green: 78,
     blue: 70,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 214,
     green: 96,
     blue: 82,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 188,
     green: 64,
     blue: 56,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 207,
     green: 94,
     blue: 80,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 233,
     green: 137,
     blue: 157,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 207,
     green: 102,
     blue: 99,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 221,
     green: 127,
     blue: 117,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 207,
     green: 119,
     blue: 107,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 238,
     green: 152,
     blue: 139,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 209,
     green: 128,
     blue: 137,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 178,
     green: 122,
     blue: 135,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 255,
     green: 141,
     blue: 123,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 214,
     green: 101,
     blue: 85,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 227,
     green: 137,
     blue: 173,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 222,
     green: 110,
     blue: 149,
-    label: 'NT',
+    label: "NT",
   },
   {
     red: 203,
     green: 112,
     blue: 153,
-    label: 'NT',
+    label: "NT",
   },
-
-
 
   {
     red: 247,
     green: 184,
     blue: 167,
-    label: 'T',
+    label: "T",
   },
   {
     red: 252,
     green: 222,
     blue: 212,
-    label: 'T',
+    label: "T",
   },
   {
     red: 254,
     green: 249,
     blue: 246,
-    label: 'T',
+    label: "T",
   },
   {
     red: 231,
     green: 158,
     blue: 133,
-    label: 'T',
+    label: "T",
   },
   {
     red: 232,
     green: 179,
     blue: 158,
-    label: 'T',
+    label: "T",
   },
   {
     red: 247,
     green: 223,
     blue: 199,
-    label: 'T',
+    label: "T",
   },
   {
     red: 205,
     green: 207,
     blue: 216,
-    label: 'T',
+    label: "T",
   },
   {
     red: 216,
     green: 168,
     blue: 184,
-    label: 'T',
+    label: "T",
   },
   {
     red: 236,
     green: 162,
     blue: 146,
-    label: 'T',
+    label: "T",
   },
   {
     red: 199,
     green: 139,
     blue: 138,
-    label: 'T',
+    label: "T",
   },
   {
     red: 191,
     green: 126,
     blue: 124,
-    label: 'T',
+    label: "T",
   },
   {
     red: 202,
     green: 141,
     blue: 138,
-    label: 'T',
+    label: "T",
   },
   {
     red: 186,
     green: 123,
     blue: 152,
-    label: 'T',
+    label: "T",
   },
   {
     red: 170,
     green: 150,
     blue: 162,
-    label: 'T',
+    label: "T",
   },
   {
     red: 154,
     green: 109,
     blue: 140,
-    label: 'T',
+    label: "T",
   },
   {
     red: 171,
     green: 159,
     blue: 171,
-    label: 'T',
+    label: "T",
   },
   {
     red: 100,
     green: 77,
     blue: 95,
-    label: 'T',
+    label: "T",
   },
   {
     red: 169,
     green: 158,
     blue: 166,
-    label: 'T',
+    label: "T",
   },
   {
     red: 207,
     green: 193,
     blue: 229,
-    label: 'T',
+    label: "T",
   },
   {
     red: 221,
     green: 224,
     blue: 229,
-    label: 'T',
+    label: "T",
   },
   {
     red: 191,
     green: 179,
     blue: 199,
-    label: 'T',
+    label: "T",
   },
   {
     red: 206,
     green: 205,
     blue: 213,
-    label: 'T',
+    label: "T",
   },
   {
     red: 202,
     green: 186,
     blue: 197,
-    label: 'T',
+    label: "T",
   },
   {
     red: 215,
     green: 233,
     blue: 243,
-    label: 'T',
+    label: "T",
   },
   {
     red: 196,
     green: 187,
     blue: 190,
-    label: 'T',
+    label: "T",
   },
   {
     red: 200,
     green: 190,
     blue: 181,
-    label: 'T',
+    label: "T",
   },
   {
     red: 175,
     green: 174,
     blue: 121,
-    label: 'T',
+    label: "T",
   },
   {
     red: 204,
     green: 168,
     blue: 156,
-    label: 'T',
+    label: "T",
   },
   {
     red: 203,
     green: 196,
     blue: 178,
-    label: 'T',
+    label: "T",
   },
 ];
 
 // valores = cor exadecimal
 export function knn(corHEX) {
-
   let corRGB = hexRgb(corHEX);
 
-  let values = { red: corRGB.red, green: corRGB.green, blue: corRGB.blue};
+  let values = { red: corRGB.red, green: corRGB.green, blue: corRGB.blue };
   const k = 5;
   const data = trainingData;
 
@@ -426,11 +423,8 @@ export function knn(corHEX) {
   );
 
   // normalizando entrada
-  values = [
-    values[0] / max0,
-    values[1] / max1,
-    values[2] / max2,
-  ];
+  // values = [values[0] / max0, values[1] / max1, values[2] / max2];
+  values = [values.red / max0, values.green / max1, values.blue / max2];
 
   // normalizando vetor
   obj = obj.map((a, i) => {
