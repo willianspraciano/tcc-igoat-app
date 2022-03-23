@@ -46,6 +46,6 @@
     "@babel/core": "^7.12.9"
   },
   "private": true,
-  "name": "02-maskdetection-react-native-app",
+  "name": "com.vermacha.vermacha",
   "version": "1.0.0"
 }

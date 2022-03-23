@@ -126,6 +126,8 @@ export default function ResultPage({ navigation, route }) {
     console.log(img);
     setCroppedImage(croppedImg);
 
+    setTextResult("Analisando...");
+
     const result = await ImageColors.getColors(croppedImg.uri, {
       fallback: "#ffffff",
       pixelSpacing: 1,
@@ -134,7 +136,9 @@ export default function ResultPage({ navigation, route }) {
     });
     console.log("Cores: ", result);
 
-    let dominantColor;
+    setTextResult("Identificando cor...");
+
+    let dominantColor = result?.muted;
 
     switch (result.platform) {
       case "android":
@@ -153,11 +157,11 @@ export default function ResultPage({ navigation, route }) {
         throw new Error("Unexpected platform key");
     }
 
-    await setColor(dominantColor);
+    setColor(dominantColor);
     const diagnosis = knn(dominantColor);
     console.log("Diagnóstico: ", diagnosis);
     console.log("Color: ", dominantColor);
-    await setTextResult(diagnosis[1] === "T" ? "Vermifugar" : "Não Vermifugar");
+    setTextResult(diagnosis[1] === "T" ? "Vermifugar" : "Não Vermifugar");
   };
 
   return (
@@ -210,7 +214,8 @@ export default function ResultPage({ navigation, route }) {
               />
             </>
           )}
-          {color && (
+          {<Text style={{ fontWeight: "bold" }}>Resultado: {textResult}</Text>}
+          {
             <Text
               style={{
                 color: color,
@@ -218,10 +223,7 @@ export default function ResultPage({ navigation, route }) {
             >
               Cor de análise: {color}
             </Text>
-          )}
-          {textResult && (
-            <Text style={{ fontWeight: "bold" }}>{textResult}</Text>
-          )}
+          }
         </View>
         {/* <Button
           title="Predict"

@@ -6,7 +6,7 @@
       "android",
       "web"
     ],
-    "slug": "ai-app",
+    "slug": "VERMACHA",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,7 +28,7 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.willianpraciano.aiapp"
+      "package": "com.vermacha.vermacha"
     }
   }
 }
