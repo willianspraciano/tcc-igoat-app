@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Camera } from "expo-camera";
 
-import { FontAwesome } from "@expo/vector-icons";
+import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
 import * as tf from "@tensorflow/tfjs";
 import { fetch, bundleResourceIO } from "@tensorflow/tfjs-react-native";
@@ -86,16 +86,24 @@ export default function CameraPage({ navigation }) {
     }
   }
 
-  // if (hasPermission === null) return <View />;
+  if (hasPermission === null) return <View />;
 
   if (hasPermission === false) return <Text> Acesso negado! </Text>;
 
   return (
     <SafeAreaView style={styles.container}>
       {isFocused && <Camera style={{ flex: 1 }} type={type} ref={camRef} />}
-      <TouchableOpacity style={styles.button} onPress={takePicture}>
-        <FontAwesome name="camera" size={23} color="#FFF" />
-      </TouchableOpacity>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button} onPress={() => {}}>
+          <MaterialIcons name="flip-camera-ios" size={30} color="#FFF" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={takePicture}>
+          <MaterialIcons name="photo-camera" size={35} color="#FFF" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => {}}>
+          <MaterialIcons name="image" size={30} color="#FFF" />
+        </TouchableOpacity>
+      </View>
       {capturedPhoto && (
         <Modal animationType="slide" transparent={false} visible={openModal}>
           <View style={styles.containerModal}>
@@ -121,13 +129,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   button: {
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#121212",
-    margin: 20,
-    borderRadius: 10,
-    height: 50,
+    margin: 10,
+    borderRadius: 50,
+    height: 60,
+    width: 60,
   },
   containerModal: {
     flex: 1,
