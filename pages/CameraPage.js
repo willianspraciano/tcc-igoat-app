@@ -37,8 +37,9 @@ export default function CameraPage({ navigation }) {
 
   const [mucosas, setMucosas] = useState([]);
   const [model, setModel] = useState();
-
+  
   const isFocused = useIsFocused();
+  const [showCamera, setShowCamera] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -75,6 +76,12 @@ export default function CameraPage({ navigation }) {
     })();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      if(isFocused && !showCamera) await setShowCamera(true);
+    })();
+  }, [isFocused])
+
   async function takePicture() {
     if (camRef) {
       const data = await camRef.current.takePictureAsync();
@@ -100,26 +107,28 @@ export default function CameraPage({ navigation }) {
   }
 
   const pickImage = async () => {
-    if (camRef) {
-      // No permissions request is necessary for launching the image library
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        // allowsEditing: true,
-        // aspect: [1, 1],
-        quality: 1,
-      });
+    await setShowCamera(false);
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      // allowsEditing: true,
+      // aspect: [1, 1],
+      quality: 1,
+    });
 
-      console.log(result);
+    console.log(result);
 
-      if (!result.cancelled) {
-        const imageObj = await manipulateAsync(
-          result.uri,
-          [{ resize: { width: 240, height: 240 } }],
-          { compress: 1, format: SaveFormat.JPG }
-        );
-        console.log(imageObj);
-        navigation.navigate("Resultado", { image: imageObj, model: model });
-      }
+    if (!result.cancelled) {
+      const imageObj = await manipulateAsync(
+        result.uri,
+        [{ resize: { width: 240, height: 240 } }],
+        { compress: 1, format: SaveFormat.JPG }
+      );
+      console.log(imageObj);
+      // setShowCamera(true);
+      navigation.navigate("Resultado", { image: imageObj, model: model });
+    } else {
+      await setShowCamera(true);
     }
   };
 
@@ -129,18 +138,26 @@ export default function CameraPage({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {isFocused && 
+      {isFocused &&
         <>
-          <Camera style={{ flex: 1 }} type={type} ref={camRef} ratio={'4:3'}/>
+          { showCamera && 
+            <Camera 
+              style={{ flex: 1 }} 
+              type={type} 
+              ref={camRef} 
+              ratio={'4:3'}
+            /> 
+          }
+
           <View style={styles.buttonsContainer}>
             <TouchableOpacity style={styles.button} onPress={flipCamera}>
-              <MaterialIcons name="flip-camera-ios" size={30} color="#FFF" />
+              <MaterialIcons name="flip-camera-ios" size={35} color="#FFF" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={takePicture}>
-              <MaterialIcons name="photo-camera" size={35} color="#FFF" />
+              <MaterialIcons name="photo-camera" size={40} color="#FFF" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={pickImage}>
-              <MaterialIcons name="image" size={30} color="#FFF" />
+              <MaterialIcons name="image" size={35} color="#FFF" />
             </TouchableOpacity>
           </View>
         </>
@@ -170,14 +187,14 @@ export default function CameraPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
   },
   buttonsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: "20%",
-    padding: 10
+    height: "25%",
+    padding: 10,
   },
   button: {
     justifyContent: "center",
@@ -185,8 +202,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#121212",
     margin: 10,
     borderRadius: 50,
-    height: 60,
-    width: 60,
+    height: 70,
+    width: 70,
   },
   containerModal: {
     flex: 1,

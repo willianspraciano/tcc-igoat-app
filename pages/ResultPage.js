@@ -225,13 +225,6 @@ export default function ResultPage({ navigation, route }) {
             </Text>
           }
         </View>
-        {/* <Button
-          title="Predict"
-          onPress={() => {
-            getMucosa(image);
-          }}
-          disabled={!isEnabled}
-        /> */}
       </View>
     </ScrollView>
   );
