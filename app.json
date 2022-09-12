@@ -1,19 +1,19 @@
 {
   "expo": {
-    "name": "VERMACHA",
+    "name": "iGoat",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
-    "slug": "VERMACHA",
+    "slug": "iGoat",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0091ea"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -28,13 +28,21 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.vermacha.vermacha"
+      "package": "com.igoat.igoat"
     },
     "plugins": [
       [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+          "isAccessMediaLocationEnabled": true
         }
       ]
     ]

@@ -1,50 +1,50 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, ScrollView } from "react-native";
-import { Button, Input } from "react-native-elements";
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Image, ScrollView } from 'react-native';
+import { Button, Input } from 'react-native-elements';
 
-import * as tf from "@tensorflow/tfjs";
-import { fetch, bundleResourceIO } from "@tensorflow/tfjs-react-native";
-import * as automl from "@tensorflow/tfjs-automl";
+import * as tf from '@tensorflow/tfjs';
+import { fetch, bundleResourceIO } from '@tensorflow/tfjs-react-native';
+import * as automl from '@tensorflow/tfjs-automl';
 
-import Svg, { Rect } from "react-native-svg";
-import * as jpeg from "jpeg-js";
+import Svg, { Rect } from 'react-native-svg';
+import * as jpeg from 'jpeg-js';
 
-import "expo-dev-client";
+import 'expo-dev-client';
 
-import ImageColors from "react-native-image-colors";
+import ImageColors from 'react-native-image-colors';
 
-import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 export default function App() {
   const [imageLink, setImageLink] = useState(
-    "https://raw.githubusercontent.com/ohyicong/masksdetection/master/dataset/without_mask/142.jpg"
+    'https://raw.githubusercontent.com/ohyicong/masksdetection/master/dataset/without_mask/142.jpg'
   );
   const [isEnabled, setIsEnabled] = useState(true);
   const [mucosas, setMucosas] = useState([]);
-  const [model, setModel] = useState("");
+  const [model, setModel] = useState('');
 
   const [image, setImage] = useState();
 
   useEffect(() => {
     async function loadModel() {
-      console.log("[+] Application started");
+      console.log('[+] Application started');
       //Wait for tensorflow module to be ready
       const tfReady = await tf.ready();
 
-      console.log("[+] Loading Mucosa detection model");
+      console.log('[+] Loading Mucosa detection model');
 
-      const modelJson = await require("./assets/model/model.json");
-      const modelWeight = await require("./assets/model/group1-shard.bin");
+      const modelJson = await require('./assets/model/model.json');
+      const modelWeight = await require('./assets/model/group1-shard.bin');
       const maskDetector = await tf
         .loadGraphModel(bundleResourceIO(modelJson, modelWeight))
         .catch((e) => console.log(e));
       const mod = new automl.ObjectDetectionModel(maskDetector, [
-        "background",
-        "Mucosa",
+        'background',
+        'Mucosa',
       ]);
       setModel(mod);
 
-      console.log("[+] Model Loaded");
+      console.log('[+] Model Loaded');
     }
     loadModel();
   }, []);
@@ -68,11 +68,10 @@ export default function App() {
 
   const getMucosa = async () => {
     try {
-      console.log("[+] Retrieving image from link :" + imageLink);
+      console.log('[+] Retrieving image from link :' + imageLink);
       const response = await fetch(imageLink, {}, { isBinary: true });
       const rawImageData = await response.arrayBuffer();
       console.log('RESPONSE: ', rawImageData);
-
 
       const imageTensor = await imageToTensor(rawImageData).resizeBilinear([
         224, 224,
@@ -80,14 +79,14 @@ export default function App() {
 
       const options = { score: 0.5, iou: 0.5, topk: 20 };
       const predictions = await model.detect(imageTensor, options);
-      console.log("Predict: ", predictions);
+      console.log('Predict: ', predictions);
 
-      console.log("[+] Prediction Completed");
+      console.log('[+] Prediction Completed');
 
       var tempArray = [];
       //Loop through the available faces, check if the person is wearing a mask.
       for (let i = 0; i < predictions.length; i++) {
-        let color = "red";
+        let color = 'red';
         let width = predictions[i].box.width;
         let height = predictions[i].box.height;
         tempArray.push({
@@ -99,7 +98,7 @@ export default function App() {
       cropImage(imageLink, predictions[0].box);
       setMucosas(tempArray);
     } catch (err) {
-      console.log("[-] Unable to load image", err);
+      console.log('[-] Unable to load image', err);
     }
   };
 
@@ -128,27 +127,27 @@ export default function App() {
     setImage(croppedImage);
 
     const result = await ImageColors.getColors(croppedImage.uri, {
-      fallback: "#228B22",
+      fallback: '#228B22',
       cache: true,
-      key: "unique_key",
+      key: 'unique_key',
     });
-    console.log("Cores: ", result);
+    console.log('Cores: ', result);
 
     switch (result.platform) {
-      case "android":
+      case 'android':
         // android result properties
         const vibrantColor = result.vibrant;
         break;
-      case "web":
+      case 'web':
         // web result properties
         const lightVibrantColor = result.lightVibrant;
         break;
-      case "ios":
+      case 'ios':
         // iOS result properties
         const primaryColor = result.primary;
         break;
       default:
-        throw new Error("Unexpected platform key");
+        throw new Error('Unexpected platform key');
     }
   };
 
@@ -156,7 +155,7 @@ export default function App() {
     <ScrollView>
       <View style={styles.container}>
         <Input
-          placeholder="image link"
+          placeholder='image link'
           onChangeText={(inputText) => {
             console.log(inputText);
             setImageLink(inputText);
@@ -184,8 +183,8 @@ export default function App() {
               width: 224,
               height: 224,
               borderWidth: 2,
-              borderColor: "black",
-              resizeMode: "stretch",
+              borderColor: 'black',
+              resizeMode: 'stretch',
             }}
             source={{
               uri: imageLink,
@@ -193,7 +192,7 @@ export default function App() {
             PlaceholderContent={<View>No Image Found</View>}
           />
 
-          <Svg height="224" width="224" style={{ marginTop: -224 }}>
+          <Svg height='224' width='224' style={{ marginTop: -224 }}>
             {mucosas.map((mucosa, i) => {
               return (
                 <Rect
@@ -203,8 +202,8 @@ export default function App() {
                   width={mucosa.location.width}
                   height={mucosa.location.height}
                   stroke={mucosa.color}
-                  strokeWidth="3"
-                  fill=""
+                  strokeWidth='3'
+                  fill=''
                 />
               );
             })}
@@ -217,8 +216,8 @@ export default function App() {
                   width: 224,
                   height: 224,
                   borderWidth: 2,
-                  borderColor: "black",
-                  resizeMode: "stretch",
+                  borderColor: 'black',
+                  resizeMode: 'stretch',
                 }}
                 source={{ uri: image.uri }}
                 PlaceholderContent={<View>No Image Found</View>}
@@ -227,7 +226,7 @@ export default function App() {
           )}
         </View>
         <Button
-          title="Predict"
+          title='Predict'
           onPress={() => {
             getMucosa();
           }}
@@ -241,8 +240,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

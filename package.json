@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
@@ -15,14 +15,17 @@
     "@tensorflow/tfjs": "^2.6.0",
     "@tensorflow/tfjs-automl": "^1.3.0",
     "@tensorflow/tfjs-react-native": "^0.8.0",
+    "date-fns": "^2.28.0",
     "expo": "^44.0.6",
     "expo-camera": "^12.1.2",
     "expo-dev-client": "^0.8.4",
-    "expo-file-system": "^13.1.4",
+    "expo-file-system": "~13.1.4",
     "expo-gl": "~11.1.1",
     "expo-gl-cpp": "~11.1.0",
     "expo-image-manipulator": "~10.2.0",
     "expo-image-picker": "^12.0.2",
+    "expo-media-library": "^14.1.0",
+    "expo-permissions": "^13.2.0",
     "expo-splash-screen": "~0.14.1",
     "expo-status-bar": "~1.2.0",
     "expo-updates": "^0.11.6",
@@ -47,6 +50,6 @@
     "@babel/core": "^7.12.9"
   },
   "private": true,
-  "name": "com.vermacha.vermacha",
+  "name": "com.igoat.igoat",
   "version": "1.0.0"
 }

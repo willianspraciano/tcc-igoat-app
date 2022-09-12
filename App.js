@@ -1,9 +1,9 @@
-import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import CameraPage from "./pages/CameraPage";
-import ResultPage from "./pages/ResultPage";
+import CameraPage from './src/pages/CameraPage';
+import ResultPage from './src/pages/ResultPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,16 +12,16 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Camera"
+          name='Camera'
           component={CameraPage}
-          options={{ title: "Camera", unmountOnBlur: true }}
+          options={{ title: 'iGoat', unmountOnBlur: true }}
           screenOptions={{ unmountOnBlur: true }}
         />
         <Stack.Screen
-          name="Resultado"
+          name='Resultado'
           component={ResultPage}
           options={{
-            title: "Resultado",
+            title: 'Resultado',
           }}
         />
       </Stack.Navigator>

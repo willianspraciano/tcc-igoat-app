@@ -3,14 +3,27 @@
     "version": ">= 0.47.0"
   },
   "build": {
+    "release": {
+      "node": "16.13.1"
+    },
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "image" : "latest"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "image" : "latest"
+      }
     },
-    "production": {}
+    "production": {
+      "android": {
+        "image" : "latest"
+      }
+    }
   },
   "submit": {
     "production": {}
