@@ -1,5 +1,5 @@
 <h1 align="center">
-  👁️🐐 iGoat app
+  🐐📲 iGoat app
 </h1>
 
 <p align="center">
@@ -58,7 +58,7 @@ yarn
 
 Para rodar o projeto, com o [Node.js](https://nodejs.org/pt-br/) instalado, basta executar o seguinte comando:
 ```jsx
-npm install
+npm run start
 ```
 ou
 ```jsx
