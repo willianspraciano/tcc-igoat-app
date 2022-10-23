@@ -26,6 +26,8 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 Este é o projeto desenvolvido ao longo do Trabalho de Conclusão de Curso (TCC) de [Willian S. Praciano](https://github.com/willianspraciano).
 
+Acesse a playlist de vídeos explicando o projeto clicando [AQUI](https://youtube.com/playlist?list=PL_MFJqxQeQTITH9Z6z3x094IGrrD43Dwd).
+
 ## ✨ Funcionalidades
 
 - 📷 Captura fotografias ou permite selecionar uma imagem previamente salva;
