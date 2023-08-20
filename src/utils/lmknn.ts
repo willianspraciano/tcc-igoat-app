@@ -1,6 +1,7 @@
+/* eslint-disable no-restricted-syntax */
+import hexRgb from 'hex-rgb';
 import { distance } from 'ml-distance'; // biblioteca para obter Distância Euclidiana
 import { mode } from 'simple-statistics'; // biblioteca para obter a Moda
-import hexRgb from 'hex-rgb';
 
 /**
  * Dados com 200 amostras, sendo:
@@ -153,7 +154,7 @@ const trainingData2 = [
   //   label: 'T',
   // },
 
-  //DESCARTAR
+  // DESCARTAR
   // {
   //   red: 196,
   //   green: 187,
@@ -317,7 +318,7 @@ const trainingData2 = [
     label: 'T',
   },
   {
-    //manter
+    // manter
     red: 151,
     green: 102,
     blue: 113,
@@ -360,7 +361,7 @@ const trainingData2 = [
     label: 'T',
   },
   {
-    //manter
+    // manter
     red: 157,
     green: 110,
     blue: 99,
@@ -3700,17 +3701,21 @@ const trainingData = [
   },
 ];
 
-export function lmknn(corHEX) {
-  let corRGB = hexRgb(corHEX);
+export function lmknn(corHEX: string) {
+  const corRGB = hexRgb(corHEX);
 
-  let values = { red: corRGB.red, green: corRGB.green, blue: corRGB.blue };
+  const originalValues = {
+    red: corRGB.red,
+    green: corRGB.green,
+    blue: corRGB.blue,
+  };
   const k = 15;
   const data = [...trainingData];
 
   const classe = data.map((info) => info.label);
 
-  let obj = data.map((info) => {
-    let aux = [];
+  const obj = data.map((info) => {
+    const aux = [];
     aux.push(info.red);
     aux.push(info.green);
     aux.push(info.blue);
@@ -3721,7 +3726,11 @@ export function lmknn(corHEX) {
    * NÃO ORMALIZAÇÃO
    */
   // normalizando entrada
-  values = [values.red, values.green, values.blue];
+  const values = [
+    originalValues.red,
+    originalValues.green,
+    originalValues.blue,
+  ];
 
   /**
    * NORMALIZAÇÃO
@@ -3741,8 +3750,8 @@ export function lmknn(corHEX) {
   // );
 
   // normalizando entrada
-  // values = [values.red / max0, values.green / max1, values.blue / max2];
-  // values = [values[0] / max0, values[1] / max1, values[2] / max2];
+  // values = [originalValues.red / max0, originalValues.green / max1, originalValues.blue / max2];
+  // values = [originalValues[0] / max0, originalValues[1] / max1, originalValues[2] / max2];
 
   // normalizando vetor
   // obj = obj.map((a, i) => {
@@ -3756,79 +3765,83 @@ export function lmknn(corHEX) {
   const dist = obj.map((a, i) => distance.euclidean(a, values));
 
   // Ordenando as distâncias do menor para maior
-  let distwithlabel = dist.map((dist, i) => [dist, classe[i], obj[i]]);
-  distwithlabel = distwithlabel.sort((a, b) => {
+  let distancesWithLabel = dist.map((distanceWithLabel, i) => [
+    distanceWithLabel,
+    classe[i],
+    obj[i],
+  ]);
+  distancesWithLabel = distancesWithLabel.sort((a, b) => {
     if (a[0] < b[0]) return -1;
     if (a[0] > b[0]) return 1;
     return 0;
   });
 
-  //pega os os k vetores mais próximos com classe T
-  let kObjectsWithTClass = [];
+  // pega os os k vetores mais próximos com classe T
+  const kObjectsWithTClass = [];
   let i = 0;
-  for (let dist of distwithlabel) {
-    if (dist[1] === 'T') {
-      kObjectsWithTClass.push(dist);
+  for (const distanceWithLabel of distancesWithLabel) {
+    if (distanceWithLabel[1] === 'T') {
+      kObjectsWithTClass.push(distanceWithLabel);
       i++;
     }
     if (i === k) break;
   }
 
   // pega a soma total da primeira posição de todos os vetores da classe T
-  let sum00T = kObjectsWithTClass.reduce(
+  const sum00T = kObjectsWithTClass.reduce(
     (previousValue, currentValue) => previousValue + currentValue[2][0],
-    0
+    0,
   );
 
   // pega a soma total da segunda posição de todos os vetores da classe T
-  let sum01T = kObjectsWithTClass.reduce(
+  const sum01T = kObjectsWithTClass.reduce(
     (previousValue, currentValue) => previousValue + currentValue[2][1],
-    0
+    0,
   );
 
   // pega a soma total da terceira posição de todos os vetores da classe T
-  let sum02T = kObjectsWithTClass.reduce(
+  const sum02T = kObjectsWithTClass.reduce(
     (previousValue, currentValue) => previousValue + currentValue[2][2],
-    0
+    0,
   );
-  let mean00T = sum00T / k;
-  let mean01T = sum01T / k;
-  let mean02T = sum02T / k;
-  let meanObjectsWithTClass = [mean00T, mean01T, mean02T]; //centroid
-  let euclidiandDistanteFromTCentroid = distance.euclidean(
+  const mean00T = sum00T / k;
+  const mean01T = sum01T / k;
+  const mean02T = sum02T / k;
+  const meanObjectsWithTClass = [mean00T, mean01T, mean02T]; // centroid
+  const euclidiandDistanteFromTCentroid = distance.euclidean(
     meanObjectsWithTClass,
-    values
+    values,
   );
 
-  //pega os os k vetores mais próximos com classe NT
-  let kObjectsWithNTClass = [];
+  // pega os os k vetores mais próximos com classe NT
+  const kObjectsWithNTClass = [];
   i = 0;
-  for (let dist of distwithlabel) {
-    if (dist[1] === 'NT') {
-      kObjectsWithNTClass.push(dist);
+  for (const distanceWithLabel of distancesWithLabel) {
+    if (distanceWithLabel[1] === 'NT') {
+      kObjectsWithNTClass.push(distanceWithLabel);
       i++;
     }
     if (i === k) break;
   }
-  let sum00NT = kObjectsWithNTClass.reduce(
+  const sum00NT = kObjectsWithNTClass.reduce(
     (previousValue, currentValue) => previousValue + currentValue[2][0],
-    0
+    0,
   );
-  let sum01NT = kObjectsWithNTClass.reduce(
+  const sum01NT = kObjectsWithNTClass.reduce(
     (previousValue, currentValue) => previousValue + currentValue[2][1],
-    0
+    0,
   );
-  let sum02NT = kObjectsWithNTClass.reduce(
+  const sum02NT = kObjectsWithNTClass.reduce(
     (previousValue, currentValue) => previousValue + currentValue[2][2],
-    0
+    0,
   );
-  let mean00NT = sum00NT / k;
-  let mean01NT = sum01NT / k;
-  let mean02NT = sum02NT / k;
-  let meanObjectsWithNTClass = [mean00NT, mean01NT, mean02NT]; //centroid
-  let euclidiandDistanteFromNTCentroid = distance.euclidean(
+  const mean00NT = sum00NT / k;
+  const mean01NT = sum01NT / k;
+  const mean02NT = sum02NT / k;
+  const meanObjectsWithNTClass = [mean00NT, mean01NT, mean02NT]; // centroid
+  const euclidiandDistanteFromNTCentroid = distance.euclidean(
     meanObjectsWithNTClass,
-    values
+    values,
   );
 
   console.log('Distance centroid T:', euclidiandDistanteFromTCentroid);

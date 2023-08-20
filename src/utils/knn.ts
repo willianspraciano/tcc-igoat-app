@@ -1,6 +1,6 @@
+import hexRgb from 'hex-rgb';
 import { distance } from 'ml-distance'; // biblioteca para obter Distância Euclidiana
 import { mode } from 'simple-statistics'; // biblioteca para obter a Moda
-import hexRgb from 'hex-rgb';
 
 /**
  * Dados do primeiro treinamento
@@ -1797,17 +1797,21 @@ const trainingDataNew = [
 ];
 
 // valores = cor exadecimal
-export function knn(corHEX) {
-  let corRGB = hexRgb(corHEX);
+export function knn(corHEX: string) {
+  const corRGB = hexRgb(corHEX);
 
-  let values = { red: corRGB.red, green: corRGB.green, blue: corRGB.blue };
+  const originalValues = {
+    red: corRGB.red,
+    green: corRGB.green,
+    blue: corRGB.blue,
+  };
   const k = 15;
   const data = trainingData;
 
   const classe = data.map((info) => info.label);
 
   let obj = data.map((info) => {
-    let aux = [];
+    const aux = [];
     aux.push(info.red);
     aux.push(info.green);
     aux.push(info.blue);
@@ -1817,26 +1821,30 @@ export function knn(corHEX) {
   // valores máximos de cada coluna
   const max0 = Math.max.apply(
     null,
-    obj.map((a, i) => a[0])
+    obj.map((a, i) => a[0]),
   );
   const max1 = Math.max.apply(
     null,
-    obj.map((a, i) => a[1])
+    obj.map((a, i) => a[1]),
   );
   const max2 = Math.max.apply(
     null,
-    obj.map((a, i) => a[2])
+    obj.map((a, i) => a[2]),
   );
 
   // normalizando entrada
-  // values = [values[0] / max0, values[1] / max1, values[2] / max2];
-  values = [values.red / max0, values.green / max1, values.blue / max2];
+  // values = [originalValues[0] / max0, originalValues[1] / max1, originalValues[2] / max2];
+  const values = [
+    originalValues.red / max0,
+    originalValues.green / max1,
+    originalValues.blue / max2,
+  ];
 
   // normalizando vetor
   obj = obj.map((a, i) => {
-    a[0] = a[0] / max0;
-    a[1] = a[1] / max1;
-    a[2] = a[2] / max2;
+    a[0] /= max0;
+    a[1] /= max1;
+    a[2] /= max2;
 
     return a;
   });
@@ -1845,16 +1853,16 @@ export function knn(corHEX) {
   const dist = obj.map((a, i) => distance.euclidean(a, values));
 
   // Ordenando as distâncias do menor para maior
-  var distwithlabel = dist.map((a, i) => [a, classe[i]]);
+  let distwithlabel = dist.map((a, i) => [a, classe[i]]);
   distwithlabel = distwithlabel.sort((a, b) => {
     if (a[0] < b[0]) return -1;
     if (a[0] > b[0]) return 1;
     return 0;
   });
 
-  let knearest = distwithlabel.slice(0, k);
+  const knearest = distwithlabel.slice(0, k);
 
-  let labels = knearest.map((el) => el[1]);
+  const labels = knearest.map((el) => el[1]);
 
   // retornando apenas a classificação dos K primeiro elementos que mais se repete
   return mode(labels);
