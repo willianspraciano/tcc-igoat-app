@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { theme } from '../../theme';
 import { Dimensions } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -19,12 +18,6 @@ export const styles = StyleSheet.create({
     borderColor: 'black',
     resizeMode: 'stretch',
     marginBottom: 20,
-  },
-  containerModal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 20,
   },
   saveButton: {
     justifyContent: 'center',
