@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "iGoat",
+    "jsEngine": "jsc",
     "platforms": [
       "ios",
       "android",
@@ -16,19 +17,34 @@
       "backgroundColor": "#0091ea"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/14266102-96b0-49cd-8b6c-b72e5b4ae3b5"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos."
+      },
+      "runtimeVersion": {
+        "policy": "sdkVersion"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.igoat.igoat"
+      "package": "com.igoat.igoat",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION"
+      ],
+      "runtimeVersion": "1.0.0"
     },
     "plugins": [
       [
@@ -45,6 +61,11 @@
           "isAccessMediaLocationEnabled": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "14266102-96b0-49cd-8b6c-b72e5b4ae3b5"
+      }
+    }
   }
 }

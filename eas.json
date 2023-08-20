@@ -4,7 +4,7 @@
   },
   "build": {
     "release": {
-      "node": "16.13.1"
+      "node": "18.17.1"
     },
     "development": {
       "developmentClient": true,
@@ -14,12 +14,15 @@
       }
     },
     "preview": {
+      "channel": "preview",
       "distribution": "internal",
       "android": {
-        "image" : "latest"
+        "image" : "latest",
+        "buildType": "apk"
       }
     },
     "production": {
+      "channel": "production",
       "android": {
         "image" : "latest"
       }
