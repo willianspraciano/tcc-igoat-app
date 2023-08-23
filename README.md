@@ -12,6 +12,16 @@
 
 <br>
 
+<p align="center">
+  <img alt="Frontend" src=".github/icon.png" width="15%">
+</p>
+<p align="center">
+  <img alt="Frontend" src=".github/splash.png" width="20%">
+  <img alt="Frontend" src=".github/camera.png" width="20%">
+  <img alt="Frontend" src=".github/resultado.png" width="20%">
+  <img alt="Frontend" src=".github/salvar.png" width="20%">
+</p>
+
 ## 🌐 Tecnologias
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
@@ -26,7 +36,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 Este é o projeto desenvolvido ao longo do Trabalho de Conclusão de Curso (TCC) de [Willian S. Praciano](https://github.com/willianspraciano).
 
-Acesse a playlist de vídeos explicando o projeto clicando [AQUI](https://youtube.com/playlist?list=PL_MFJqxQeQTITH9Z6z3x094IGrrD43Dwd).
+▶️ Acesse a playlist de vídeos explicando o projeto clicando [AQUI](https://youtube.com/playlist?list=PL_MFJqxQeQTITH9Z6z3x094IGrrD43Dwd).
 
 ## ✨ Funcionalidades
 
@@ -50,7 +60,7 @@ Para instalar as dependências execute o comando abaixo na pasta do projeto:
 ```bash
 npm install
 ```
-ou 
+ou
 ```bash
 yarn
 ```
